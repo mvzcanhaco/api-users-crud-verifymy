@@ -119,15 +119,20 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	var user entity.User
+	user, err := h.userUseCase.GetUserByID(uint(id))
+	if err != nil {
+		response.BadRequest(c, err)
+		return
+	}
+
 	if err := c.ShouldBindJSON(&user); err != nil {
 		response.BadRequest(c, err)
 		return
 	}
 
-	user.ID = uint(id)
+	user.ID = id
 
-	if err := h.userUseCase.UpdateUser(&user); err != nil {
+	if err := h.userUseCase.UpdateUser(user); err != nil {
 		response.InternalServerError(c, err)
 		return
 	}

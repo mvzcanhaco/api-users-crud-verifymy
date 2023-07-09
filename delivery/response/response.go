@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func Error(c *gin.Context, status int, payload interface{}) {
+	c.JSON(status, payload)
+}
+
 // Success envia uma resposta de sucesso com o status e o payload fornecidos.
 func Success(c *gin.Context, status int, payload interface{}) {
 	c.JSON(status, payload)

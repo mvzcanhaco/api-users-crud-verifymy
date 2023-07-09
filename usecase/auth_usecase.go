@@ -18,7 +18,7 @@ func (u *UserUseCaseImpl) AuthenticateUser(email, password string) (string, erro
 		return "", nil
 	}
 
-	token, err := generateAuthToken(user.ID)
+	token, err := generateAuthToken(user.ID, user.Profile)
 	if err != nil {
 		return "", err
 	}
@@ -28,11 +28,12 @@ func (u *UserUseCaseImpl) AuthenticateUser(email, password string) (string, erro
 }
 
 // Função de geração de token de autenticação
-func generateAuthToken(userID uint) (string, error) {
+func generateAuthToken(userID uint64, profile string) (string, error) {
 	// Defina as informações do token, como claims e tempo de expiração
 	claims := jwt.MapClaims{
-		"userID": userID,
-		"exp":    time.Now().Add(time.Hour * 24).Unix(), // Token expira em 24 horas
+		"id":      userID,
+		"exp":     time.Now().Add(time.Hour * 24).Unix(), // Token expira em 24 horas
+		"profile": profile,
 	}
 
 	// Defina a assinatura do token (pode ser uma chave secreta)

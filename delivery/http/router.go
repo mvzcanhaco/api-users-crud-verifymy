@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/mvzcanhaco/api-users-crud-verifymy/middleware"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/usecase"
 )
 
@@ -27,10 +28,15 @@ func (r *Router) RegisterRoutes() *gin.Engine {
 	{
 		v1.POST("/login", r.authHandler.Login)
 		v1.POST("/users", r.userHandler.CreateUser)
+
+		// Rotas protegidas pelo middleware
+		v1.Use(middleware.AuthMiddleware())
 		v1.GET("/users/:id", r.userHandler.GetUserByID)
 		v1.GET("/users", r.userHandler.GetAllUsers)
-		v1.PUT("/users/:id", r.userHandler.UpdateUser)
-		v1.DELETE("/users/:id", r.userHandler.DeleteUser)
+		// Rotas protegidas por autenticação e perfil de administrador
+		v1.PUT("/users/:id", middleware.AdminOnlyMiddleware(), r.userHandler.UpdateUser)
+		v1.DELETE("/users/:id", middleware.AdminOnlyMiddleware(), r.userHandler.DeleteUser)
+
 	}
 
 	return router
