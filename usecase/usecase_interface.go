@@ -6,7 +6,7 @@ import (
 )
 
 type UserUseCase interface {
-	CreateUser(user *entity.User) error
+	CreateUser(user *CreateUserData) error
 	GetUserByID(id uint) (*entity.User, error)
 	GetAllUsers(page, pageSize int) ([]*entity.User, error)
 	UpdateUser(user *entity.User) error
@@ -23,4 +23,18 @@ func NewUserUseCaseImpl(userRepo repository.UserRepository) UserUseCase {
 	return &UserUseCaseImpl{
 		userRepo: userRepo,
 	}
+}
+
+type CreateUserData struct {
+	Name      string          `json:"name" validate:"required"`
+	Email     string          `json:"email" validate:"required,email"`
+	Password  string          `json:"password" validate:"required,min=6"`
+	BirthDate string          `json:"birthDate" validate:"required"`
+	Adress    *entity.Address `json:"address" validate:"required"`
+}
+
+type UpdateUserData struct {
+	Email     string          `json:"email" validate:"required,email"`
+	BirthDate string          `json:"birthDate" validate:"required"`
+	Adress    *entity.Address `json:"address" validate:"required"`
 }

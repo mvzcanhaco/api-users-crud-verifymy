@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/mvzcanhaco/api-users-crud-verifymy/db"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/delivery/http"
@@ -17,8 +18,14 @@ func main() {
 	userRepo := repository.NewUserRepositoryImpl(db)
 	userUseCase := usecase.NewUserUseCaseImpl(userRepo)
 	r := http.SetupRoutes(userUseCase)
-	// Iniciar o servidor HTTP
-	if err := r.Run(":8080"); err != nil {
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	// Iniciar o servidor HTTP na porta especificada
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }

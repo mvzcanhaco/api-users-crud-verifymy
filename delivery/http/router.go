@@ -2,7 +2,7 @@ package http
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/mvzcanhaco/api-users-crud-verifymy/middleware"
+	"github.com/mvzcanhaco/api-users-crud-verifymy/delivery/middleware"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/usecase"
 )
 
@@ -82,7 +82,7 @@ func (r *Router) RegisterRoutes() *gin.Engine {
 		// @Param input body UpdateUserInput true "Novos dados do usuário"
 		// @Success 200 {object} UserResponse
 		// @Router /api/v1/users/{id} [put]
-		v1.PUT("/users/:id", middleware.AdminOnlyMiddleware(), r.userHandler.UpdateUser)
+		v1.PATCH("/users/:id", middleware.AdminOnlyMiddleware(), r.userHandler.UpdateUser)
 
 		// Anotações do Swagger para a rota de exclusão de usuário
 		// @Summary Excluir usuário

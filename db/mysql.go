@@ -1,6 +1,8 @@
 package db
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -8,12 +10,20 @@ import (
 )
 
 func NewDB() (*gorm.DB, error) {
-	dsn := "root:root@tcp(mysql:3306)/vmyCrud?charset=utf8mb4&parseTime=True&loc=Local"
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+
+	// Construir a DSN usando as variáveis de ambiente
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		dbUser, dbPassword, dbHost, dbPort, dbName)
 	return gorm.Open(mysql.Open(dsn), &gorm.Config{})
 }
 
 func SetupDatabase() *gorm.DB {
-	time.Sleep(5 * time.Second) // Atraso de 5 segundos
+	time.Sleep(10 * time.Second) // Atraso de 5 segundos
 
 	// Configurar conexão com o banco de dados
 	dbCon, err := NewDB()
