@@ -76,6 +76,16 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 		return
 	}
 
+	// Calcula a idade com base na data de nascimento
+	age, err := utils.CalculateAge(user.BirthDate)
+	if err != nil {
+		response.InternalServerError(c, err)
+		return
+	}
+
+	// Atribui a idade calculada ao usuário
+	user.Age = age
+
 	response.Success(c, http.StatusOK, user)
 }
 
@@ -85,26 +95,32 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 
 	pageInt, err := strconv.Atoi(page)
 	if err != nil || pageInt < 1 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Valor inválido para 'page'",
-		})
+		response.BadRequest(c, err)
 		return
 	}
 
 	pageSizeInt, err := strconv.Atoi(pageSize)
 	if err != nil || pageSizeInt < 1 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Valor inválido para 'pageSize'",
-		})
+		response.BadRequest(c, err)
 		return
 	}
 
 	users, err := h.userUseCase.GetAllUsers(pageInt, pageSizeInt)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Erro ao buscar usuários",
-		})
+		response.InternalServerError(c, err)
 		return
+	}
+
+	for _, user := range users {
+		// Calcula a idade com base na data de nascimento
+		age, err := utils.CalculateAge(user.BirthDate)
+		if err != nil {
+			// Lida com o erro, se necessário
+			continue // Ou retorne um erro ou pule para o próximo usuário
+		}
+
+		// Atribui a idade ao usuário
+		user.Age = age
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -121,7 +137,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	user, err := h.userUseCase.GetUserByID(uint(id))
 	if err != nil {
-		response.BadRequest(c, err)
+		response.NotFound(c, err)
 		return
 	}
 
@@ -130,6 +146,15 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
+	// Calcula a idade com base na data de nascimento
+	age, err := utils.CalculateAge(user.BirthDate)
+	if err != nil {
+		response.InternalServerError(c, err)
+		return
+	}
+
+	// Atribui a idade calculada ao usuário
+	user.Age = age
 	user.ID = id
 
 	if err := h.userUseCase.UpdateUser(user); err != nil {
