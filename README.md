@@ -13,7 +13,7 @@ A atividade foi iniciada com o intuito de ter uma curva de aprendizagem na lingu
 
 -Projeto Teste em MVC: https://github.com/mvzcanhaco/api-verifymy-crud-test
 
-Esse projeto está inacabado e faltando diversas funcionalidades, somente foi gerado para titudo de estudo e incluido aqui, como outro modelo de arquitetura de mais simples construção, porém com alto acoplamento e dificuldade de expansão e troca de componentes. Após esse estudo inicial, planejei uma refatoração de arquitetura e foi criado esse projeto utilizando os conceitos de Clean Archtecture. 
+Esse projeto está inacabado e faltando diversas funcionalidades, somente foi gerado para titulo de estudo e informação, foi incluido aqui como apresentação de outro modelo de arquitetura de mais simples construção, porém com alto acoplamento e dificuldade de expansão e troca de componentes. Após esse estudo inicial, planejei uma refatoração de arquitetura e foi criado esse projeto presente(https://github.com/mvzcanhaco/api-users-crud-verifymy)  utilizando os conceitos de Clean Archtecture. 
 
 ## Arquitetura:
 
