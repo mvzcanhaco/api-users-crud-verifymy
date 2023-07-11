@@ -1,7 +1,7 @@
 
 # API Rest CRUD of User for Verify
 
-Aplicação desenvolvida com o proposito de testar conhecimentos. Com um proposito de realizar um CRUD de usuários com as tecnologias 
+Aplicação desenvolvida com o proposito de testar conhecimentos, será desenvolvido um CRUD de usuários com as tecnologias 
 
 Golang 1.20 e MySQL 8.0.
 Docker
@@ -13,7 +13,7 @@ A atividade foi iniciada com o intuito de ter uma curva de aprendizagem na lingu
 
 -Projeto Teste em MVC: https://github.com/mvzcanhaco/api-verifymy-crud-test
 
-Esse projeto está inacabado e faltando diversas funcionalidades, somente foi gerado para titudo de estudo e incluso aqui como outro modelo de arquitetura de mais simples construção porém com alto acoplamento e dificuldade de expansão e troca de componentes. Após esse estudo inicial, planejei uma refatoração de arquitetura e foi criado esse projeto utilizando os conceitos de Clean Archtecture. 
+Esse projeto está inacabado e faltando diversas funcionalidades, somente foi gerado para titudo de estudo e incluido aqui, como outro modelo de arquitetura de mais simples construção, porém com alto acoplamento e dificuldade de expansão e troca de componentes. Após esse estudo inicial, planejei uma refatoração de arquitetura e foi criado esse projeto utilizando os conceitos de Clean Archtecture. 
 
 ## Arquitetura:
 
@@ -55,13 +55,6 @@ EMAIL = admin@example.com
 PASSWORD = 123456
 ```
 
-Os testes rodam com o seguinte comando:
-```
-go test -v -coverprofile cover.out ./...
-go tool cover -html cover.out 
-```
-Abra o arquivo gerado ```cover.html``` no navegador para checar a cobertura.
-
 ## Endpoints ```/api/v1```
 
 #### POST ```/users```
@@ -70,15 +63,16 @@ Para cadastrar usuário pode usar essa rota, sem nenhum uso de autenticação. S
 **Body:**
 ```
 {
-    "name": "Nome Usuário",
-    "email": "email@email.com",
-    "birthDate": "2000-08-26",
-    "address": {
-        "street": "Rua quinta, 80",
-        "city": "São Paulo",
-        "state": "São Paulo",
-        "country": "Brasil"
-    }
+  "name": "Elon Musk",
+  "email": "elonmusk@example.com",
+  "password": "password123",
+  "birthDate": "1971-06-28",
+  "address": {
+    "street": "123 Tesla Ave",
+    "city": "Los Angeles",
+    "state": "CA",
+    "country": "USA"
+  }
 }
 ```
 
@@ -92,6 +86,8 @@ Cria uma sessão autenticada (login) e retorna o token de acesso para as rotas G
     "password": "123456"
 }
 ```
+*Se utilizar o login Inicial acima, é gerado um token com Perfil "admin". Esse tem acesso a todas as rotas. Se caso logar com outro usuario cadastrado esse terá acesso "user" e somente terá acesso as rotas GET
+
 
 #### GET ```/users/:id```
 Obtém usuário a partir do seu ID.   
@@ -124,15 +120,29 @@ Atualiza usuário a partir de seu ID.
 Deleta usuário a partir de seu ID.
 *É necessário enviar o token gerado em ```POST /login``` como Bearer Token.  
 ** Somente  Perfil 'admin' podem deletar os usuários
-
-
 OBS.: É possível deletar o próprio usuário.
 
+### Testes:
 
-### Em Construção:
+Os testes rodam com o seguinte comando:
+```
+go test -v -coverprofile cover.out ./...
+go tool cover -html cover.out 
+```
+Abra o arquivo gerado ```cover.html``` no navegador para checar a cobertura.
+
+
+### Em Construção: 
+Pode ser acompanhado em: https://trello.com/b/BFL4WdlW/api-users-crud-verifymy
+
 Swager
+
 Versão Release
+
 Testes Automatizados
+
 Logs estruturados
+
 Monitoramento
+
 Melhorias Segurança
