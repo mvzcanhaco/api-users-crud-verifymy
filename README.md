@@ -58,7 +58,7 @@ PASSWORD = 123456
 Os testes rodam com o seguinte comando:
 ```
 go test -v -coverprofile cover.out ./...
-go tool cover -html=cover.out -o cover.html
+go tool cover -html cover.out 
 ```
 Abra o arquivo gerado ```cover.html``` no navegador para checar a cobertura.
 
@@ -84,6 +84,7 @@ Para cadastrar usuário pode usar essa rota, sem nenhum uso de autenticação. S
 
 #### POST ```/login```
 Cria uma sessão autenticada (login) e retorna o token de acesso para as rotas GET, UPDATE e DELETE
+
 **Body:**
 ```
 {
