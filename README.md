@@ -55,6 +55,8 @@ EMAIL = admin@example.com
 PASSWORD = 123456
 ```
 
+O arquivo API-VerifyMy-CRUD_2023-07-11.json, contém uma collection gerada no Insomnia para testar os principais endpoints.
+
 ## Endpoints ```/api/v1```
 
 #### POST ```/users```
