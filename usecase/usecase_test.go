@@ -329,7 +329,7 @@ func TestCheckEmailExists(t *testing.T) {
 	}
 
 	// Test non-existing email
-	exists, err = uc.CheckEmailExists("nonexisting@example.com")
+	exists, _ = uc.CheckEmailExists("nonexisting@example.com")
 
 	if exists {
 		t.Error("Expected email to not exist, got true")
@@ -353,7 +353,7 @@ func TestCalculateAge(t *testing.T) {
 	// Test with future birth date
 	futureDate := "2050-02-01"
 
-	age, err = utils.CalculateAge(futureDate)
+	_, err = utils.CalculateAge(futureDate)
 	if err == nil {
 		t.Error("Expected error for future birth date, got nil")
 	}
