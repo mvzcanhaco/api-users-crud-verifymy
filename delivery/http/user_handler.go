@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/delivery/response"
+	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/entity"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/utils"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/usecase"
 )
@@ -18,6 +19,16 @@ func NewUserHandler(userUseCase usecase.UserUseCase) *UserHandler {
 	return &UserHandler{
 		userUseCase: userUseCase,
 	}
+}
+
+type UserResponse struct {
+	ID        uint64          `json:"id"`
+	Name      string          `json:"name"`
+	Email     string          `json:"email"`
+	BirthDate string          `json:"birthDate"`
+	Age       int             `json:"age"`
+	Profile   string          `json:"profile"`
+	Address   *entity.Address `json:"address"`
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
@@ -43,13 +54,13 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 
 	// Atribuir a senha criptografada ao usuário
 	createUser.Password = hashedPassword
-
-	if err := h.userUseCase.CreateUser(&createUser); err != nil {
+	user, err := h.userUseCase.CreateUser(&createUser)
+	if err != nil {
 		response.InternalServerError(c, err)
 		return
 	}
 
-	response.Success(c, http.StatusCreated, createUser)
+	response.Success(c, http.StatusCreated, mapUserToResponse(user))
 }
 
 func (h *UserHandler) GetUserByID(c *gin.Context) {
@@ -59,7 +70,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 		return
 	}
 
-	user, err := h.userUseCase.GetUserByID(uint(id))
+	user, err := h.userUseCase.GetUserByID(id)
 	if err != nil {
 		response.NotFound(c, err)
 		return
@@ -75,7 +86,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	// Atribui a idade calculada ao usuário
 	user.Age = age
 
-	response.Success(c, http.StatusOK, user)
+	response.Success(c, http.StatusOK, mapUserToResponse(user))
 }
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
@@ -100,6 +111,8 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		return
 	}
 
+	// Mapear e calcular a idade de cada usuário
+	var responseUsers []*UserResponse
 	for _, user := range users {
 		// Calcula a idade com base na data de nascimento
 		age, err := utils.CalculateAge(user.BirthDate)
@@ -108,13 +121,18 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 			continue // Ou retorne um erro ou pule para o próximo usuário
 		}
 
+		// Cria um novo objeto ResponseUser
+		responseUser := mapUserToResponse(user)
+
 		// Atribui a idade ao usuário
-		user.Age = age
+		responseUser.Age = age
+
+		// Adiciona o usuário mapeado ao array de responseUsers
+		responseUsers = append(responseUsers, responseUser)
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"users": users,
-	})
+	response.Success(c, http.StatusOK, responseUsers)
+
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
@@ -124,7 +142,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	user, err := h.userUseCase.GetUserByID(uint(id))
+	user, err := h.userUseCase.GetUserByID(id)
 	if err != nil {
 		response.NotFound(c, err)
 		return
@@ -141,8 +159,8 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		user.BirthDate = updateUser.BirthDate
 	}
 
-	if updateUser.Adress != nil {
-		user.Address = updateUser.Adress
+	if updateUser.Address != nil {
+		user.Address = updateUser.Address
 	}
 
 	if updateUser.Email != "" {
@@ -154,7 +172,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, http.StatusOK, user)
+	response.Success(c, http.StatusOK, mapUserToResponse(user))
 }
 
 func (h *UserHandler) DeleteUser(c *gin.Context) {
@@ -164,10 +182,22 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 		return
 	}
 
-	if err := h.userUseCase.DeleteUser(uint(id)); err != nil {
+	if err := h.userUseCase.DeleteUser(id); err != nil {
 		response.InternalServerError(c, err)
 		return
 	}
 
 	response.NoContent(c)
+}
+
+func mapUserToResponse(user *entity.User) *UserResponse {
+	return &UserResponse{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		BirthDate: user.BirthDate,
+		Age:       user.Age,
+		Profile:   user.Profile,
+		Address:   user.Address,
+	}
 }

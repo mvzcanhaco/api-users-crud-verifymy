@@ -17,17 +17,27 @@ func Success(c *gin.Context, status int, payload interface{}) {
 
 // BadRequest envia uma resposta de erro com o status de BadRequest (400) e a mensagem de erro fornecida.
 func BadRequest(c *gin.Context, err error) {
-	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Bad request"})
+	}
 }
 
-// NotFound envia uma resposta de erro com o status de NotFound (404) e a mensagem de erro fornecida.
 func NotFound(c *gin.Context, err error) {
-	c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	errorMessage := "Not found"
+	if err != nil {
+		errorMessage = err.Error()
+	}
+	c.JSON(http.StatusNotFound, gin.H{"error": errorMessage})
 }
 
-// InternalServerError envia uma resposta de erro com o status de InternalServerError (500) e a mensagem de erro fornecida.
 func InternalServerError(c *gin.Context, err error) {
-	c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	errorMessage := "Internal server error"
+	if err != nil {
+		errorMessage = err.Error()
+	}
+	c.JSON(http.StatusInternalServerError, gin.H{"error": errorMessage})
 }
 
 // NoContent envia uma resposta vazia com o status de NoContent (204).

@@ -14,7 +14,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Verificar o cabeçalho Authorization no formato "Bearer <token>"
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação não fornecido")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação não fornecido",
+			})
 			c.Abort()
 			return
 		}
@@ -22,7 +24,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Extrair o token do cabeçalho
 		tokenArr := strings.Split(tokenString, " ")
 		if len(tokenArr) != 2 || tokenArr[0] != "Bearer" {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação inválido")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação inválido",
+			})
 			c.Abort()
 			return
 		}
@@ -34,7 +38,9 @@ func AuthMiddleware() gin.HandlerFunc {
 			return []byte("VMYCRUDTEST"), nil
 		})
 		if err != nil || !token.Valid {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação inválido1")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação inválido",
+			})
 			c.Abort()
 			return
 		}
@@ -42,7 +48,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Obter os claims do token
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação inválido2")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação inválido",
+			})
 			c.Abort()
 			return
 		}
@@ -50,7 +58,9 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Obter o valor do claim "id"
 		userID, ok := claims["id"].(float64)
 		if !ok {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação inválido3")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação inválido",
+			})
 			c.Abort()
 			return
 		}
@@ -60,7 +70,9 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		profile, ok := claims["profile"].(string)
 		if !ok {
-			response.Error(c, http.StatusUnauthorized, "Token de autenticação inválido4")
+			response.Error(c, http.StatusUnauthorized, gin.H{
+				"error": "Token de autenticação inválido",
+			})
 			c.Abort()
 			return
 		}
@@ -78,7 +90,7 @@ func AdminOnlyMiddleware() gin.HandlerFunc {
 		// Verificar se o perfil do usuário é "admin"
 		userProfile := c.GetString("profile")
 		if userProfile != "admin" {
-			response.Error(c, http.StatusForbidden, "Apenas usuários com perfil de administrador podem realizar esta operação")
+			response.Error(c, http.StatusForbidden, gin.H{"error": "Apenas usuários com perfil de administrador podem realizar esta operação"})
 			c.Abort()
 			return
 		}

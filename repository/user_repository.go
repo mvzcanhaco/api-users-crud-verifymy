@@ -7,10 +7,10 @@ import (
 
 type UserRepository interface {
 	Create(user *entity.User) error
-	FindByID(id uint) (*entity.User, error)
+	FindByID(id uint64) (*entity.User, error)
 	FindAll(page, pageSize int) ([]*entity.User, error)
 	Update(user *entity.User) error
-	Delete(id uint) error
+	Delete(id uint64) error
 	FindByEmail(email string) (*entity.User, error)
 }
 
@@ -28,7 +28,7 @@ func (r *UserRepositoryImpl) Create(user *entity.User) error {
 	return r.db.Create(user).Error
 }
 
-func (r *UserRepositoryImpl) FindByID(id uint) (*entity.User, error) {
+func (r *UserRepositoryImpl) FindByID(id uint64) (*entity.User, error) {
 	var user entity.User
 	if err := r.db.First(&user, id).Error; err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (r *UserRepositoryImpl) Update(user *entity.User) error {
 	return r.db.Save(user).Error
 }
 
-func (r *UserRepositoryImpl) Delete(id uint) error {
+func (r *UserRepositoryImpl) Delete(id uint64) error {
 	return r.db.Delete(&entity.User{}, id).Error
 }
 

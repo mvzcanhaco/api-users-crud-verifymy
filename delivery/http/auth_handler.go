@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -27,9 +28,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
+	if loginRequest.Email == "" || loginRequest.Password == "" {
+		response.BadRequest(c, errors.New("email and password are required"))
+		return
+	}
+
 	token, err := h.userUseCase.AuthenticateUser(loginRequest.Email, loginRequest.Password)
 	if err != nil {
-		response.InternalServerError(c, err)
+		response.StatusUnauthorized(c)
 		return
 	}
 

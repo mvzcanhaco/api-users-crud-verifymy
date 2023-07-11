@@ -6,11 +6,11 @@ import (
 )
 
 type UserUseCase interface {
-	CreateUser(user *CreateUserData) error
-	GetUserByID(id uint) (*entity.User, error)
+	CreateUser(user *CreateUserData) (*entity.User, error)
+	GetUserByID(id uint64) (*entity.User, error)
 	GetAllUsers(page, pageSize int) ([]*entity.User, error)
 	UpdateUser(user *entity.User) error
-	DeleteUser(id uint) error
+	DeleteUser(id uint64) error
 	CheckEmailExists(email string) (bool, error)
 	AuthenticateUser(email, password string) (string, error)
 }
@@ -30,11 +30,11 @@ type CreateUserData struct {
 	Email     string          `json:"email" validate:"required,email"`
 	Password  string          `json:"password" validate:"required,min=6"`
 	BirthDate string          `json:"birthDate" validate:"required"`
-	Adress    *entity.Address `json:"address" validate:"required"`
+	Address   *entity.Address `json:"address" validate:"required"`
 }
 
 type UpdateUserData struct {
 	Email     string          `json:"email" validate:"required,email"`
 	BirthDate string          `json:"birthDate" validate:"required"`
-	Adress    *entity.Address `json:"address" validate:"required"`
+	Address   *entity.Address `json:"address" validate:"required"`
 }
