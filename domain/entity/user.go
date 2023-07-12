@@ -38,7 +38,7 @@ func (u *User) Validate() error {
 	// Validate the BirthDate field
 	_, err = time.Parse("2006-01-02", u.BirthDate)
 	if err != nil {
-		return errors.New("BirthDate must be a valid date in the format MM/DD/YYYY")
+		return errors.New("BirthDate must be a valid date in the format YYYY-MM-DD")
 	}
 
 	// Validate the Profile field

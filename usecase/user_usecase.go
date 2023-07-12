@@ -7,8 +7,6 @@ import (
 	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/utils"
 )
 
-// Implemente as funções da interface UserUseCase
-// Exemplo:
 func (uc *UserUseCaseImpl) CreateUser(user *CreateUserData) (*entity.User, error) {
 
 	if user == nil {

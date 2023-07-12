@@ -8,7 +8,6 @@ import (
 	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/utils"
 )
 
-// Implementação de um repositório fictício para fins de teste
 type MockUserRepository struct {
 	users []*entity.User
 }
@@ -100,8 +99,6 @@ func TestCreateUser(t *testing.T) {
 	if user.Name != createUserData.Name {
 		t.Errorf("Expected user name to be %s, got %s", createUserData.Name, user.Name)
 	}
-
-	// Test other user properties
 
 	// Test error case: nil user
 	_, err = uc.CreateUser(nil)

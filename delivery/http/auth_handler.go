@@ -44,7 +44,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// Criar sessão logada ou adicionar o token no cabeçalho da resposta
 	response.Success(c, http.StatusOK, gin.H{
 		"token": token,
 	})

@@ -97,8 +97,6 @@ func (r *Router) RegisterRoutes() *gin.Engine {
 
 	}
 
-	// Rota para a documentação Swagger
-
 	return router
 }
 

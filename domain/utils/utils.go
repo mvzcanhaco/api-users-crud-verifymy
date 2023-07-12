@@ -29,8 +29,6 @@ func CalculateAge(BirthDate string) (int, error) {
 		age--
 	}
 
-	fmt.Printf("Idade calculada: %d\n", age)
-
 	if age < 0 {
 		return 0, errors.New("A data informada é do futuro")
 	}

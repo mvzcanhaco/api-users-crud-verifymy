@@ -14,7 +14,6 @@ func TestAuthMiddleware_ValidToken(t *testing.T) {
 	router := gin.Default()
 	router.Use(AuthMiddleware())
 
-	// Mock de um token válido
 	validToken := generateValidToken()
 
 	router.GET("/protected", func(c *gin.Context) {
@@ -35,7 +34,6 @@ func TestAuthMiddleware_InvalidToken(t *testing.T) {
 	router := gin.Default()
 	router.Use(AuthMiddleware())
 
-	// Mock de um token inválido
 	invalidToken := "invalid-token"
 
 	router.GET("/protected", func(c *gin.Context) {
@@ -57,7 +55,6 @@ func TestAdminOnlyMiddleware_AdminUser(t *testing.T) {
 	router := gin.Default()
 	router.Use(AdminOnlyMiddleware())
 
-	// Mock the context with an admin profile
 	router.GET("/admin-only", func(c *gin.Context) {
 		c.String(http.StatusOK, "Access granted")
 	})
@@ -76,7 +73,6 @@ func TestAdminOnlyMiddleware_NonAdminUser(t *testing.T) {
 	router := gin.Default()
 	router.Use(AdminOnlyMiddleware())
 
-	// Mock do contexto com perfil não-administrador
 	router.GET("/admin-only", func(c *gin.Context) {
 		c.String(http.StatusOK, "Access granted")
 	})

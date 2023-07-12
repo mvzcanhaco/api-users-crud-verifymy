@@ -160,7 +160,7 @@ func TestUserHandler_GetUserByID(t *testing.T) {
 		Name:      "John Doe",
 		Email:     "johndoe@example.com",
 		BirthDate: "1990-01-01",
-		Age:       33, // Altere a idade esperada com base no valor correto
+		Age:       33,
 		Profile:   "",
 		Address:   nil,
 	}
@@ -481,5 +481,3 @@ func TestSetupRoutes(t *testing.T) {
 	assert.NotNil(t, r)
 
 }
-
-// You can add more test functions for each individual route handler if needed.

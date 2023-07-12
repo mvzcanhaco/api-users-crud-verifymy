@@ -6,30 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/delivery/response"
-	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/entity"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/domain/utils"
 	"github.com/mvzcanhaco/api-users-crud-verifymy/usecase"
 )
-
-type UserHandler struct {
-	userUseCase usecase.UserUseCase
-}
-
-func NewUserHandler(userUseCase usecase.UserUseCase) *UserHandler {
-	return &UserHandler{
-		userUseCase: userUseCase,
-	}
-}
-
-type UserResponse struct {
-	ID        uint64          `json:"id"`
-	Name      string          `json:"name"`
-	Email     string          `json:"email"`
-	BirthDate string          `json:"birthDate"`
-	Age       int             `json:"age"`
-	Profile   string          `json:"profile"`
-	Address   *entity.Address `json:"address"`
-}
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var createUser usecase.CreateUserData
@@ -38,7 +17,6 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	// Verificar se o email já está cadastrado
 	emailExists, _ := h.userUseCase.CheckEmailExists(createUser.Email)
 	if emailExists {
 		response.StatusConflit(c)
@@ -117,8 +95,7 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		// Calcula a idade com base na data de nascimento
 		age, err := utils.CalculateAge(user.BirthDate)
 		if err != nil {
-			// Lida com o erro, se necessário
-			continue // Ou retorne um erro ou pule para o próximo usuário
+			continue
 		}
 
 		// Cria um novo objeto ResponseUser
@@ -154,7 +131,6 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	// Verificar se houve alguma alteração nos campos
 	if updateUser.BirthDate != "" {
 		user.BirthDate = updateUser.BirthDate
 	}
@@ -188,16 +164,4 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 	}
 
 	response.NoContent(c)
-}
-
-func mapUserToResponse(user *entity.User) *UserResponse {
-	return &UserResponse{
-		ID:        user.ID,
-		Name:      user.Name,
-		Email:     user.Email,
-		BirthDate: user.BirthDate,
-		Age:       user.Age,
-		Profile:   user.Profile,
-		Address:   user.Address,
-	}
 }
